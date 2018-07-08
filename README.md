@@ -6,6 +6,8 @@ The easiest way to get started with Stack is to deploy the bot to Heroku using t
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Next, https://discordapp.com/api/oauth2/authorize?client_id=465381251235315753&permissions=8&scope=bot
+
 ## Donate
 If you'd like to support the future of Stack, please consider leaving a donation!
 

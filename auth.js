@@ -1,7 +1,9 @@
 const auth = require('basic-auth');
 
-const username = process.env.username;
-const admins = { [username]: { password: (process.env.password || 'password') } };
+const username = (process.env.username || 'admin');
+const secret = (process.env.password || 'admin');
+
+const admins = { [username]: { password: secret } };
 
 module.exports = function (request, response, next) {
   var user = auth(request);
