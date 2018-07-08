@@ -3,7 +3,7 @@ var express = require('express')
 var Twig = require('twig');
 var http = require('http');
 var fs = require('fs');
-
+var bodyParser = require('body-parser');
 var app = express()
 
 try {
@@ -16,6 +16,10 @@ var port = process.env.PORT || 8080;
 
 app.set('view engine', 'twig');
 app.settings.views = 'views';
+
+app.use(bodyParser.urlencoded({
+	extended: false
+}));
 
 app.use(auth);
 
@@ -45,6 +49,21 @@ app.get('/command/:command', function (req, res) {
 			command: 'new'
 		});
 	}
+});
+
+app.post('/command', function (req, res) {
+	var template = fs.readFileSync('./template.txt').toString();
+	var prefixes = req.body.prefixes.split(', ');
+	
+	var template = template
+		.replace(/prefix =.*;/, "prefix = ['" + prefixes.join('", "') + "'];")
+		.replace(/help =.*;/, 'help = `' + req.body.help + '`;')
+		.substring(0, template.indexOf('gs) {') + 22)
+		.concat('gs) {\n' + req.body.code + '\n}');
+		
+	fs.writeFileSync('./commands/' + prefixes[0] + '.js', template);
+	
+	res.send('Hello World!');
 });
 
 app.listen(port, function() {

@@ -13,7 +13,7 @@
 					<input type="text" id="prefixes" name="prefixes" class="form-control" placeholder="command, cmd">
 				</div>
 				<small class="form-text text-muted">
-					You can define as many command prefixes as you'd like, separated by commas.
+					You can define as many command prefixes as you'd like, separated by commas and a space.
 				</small>
 			</div>
 			<div class="form-group">
@@ -46,7 +46,8 @@
 					</p>
 				</div>
 			</div>
-				<button type="submit" class="btn btn-block btn-primary" style="margin-top: 2vh;">Submit</button>
+			<input type="hidden" name="command" value="new">
+			<button type="submit" class="btn btn-block btn-primary" style="margin-top: 2vh;">Submit</button>
 		</form>
 		<script>
 			var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
