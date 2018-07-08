@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/DDynamic/Stack#readme",
   "dependencies": {
+    "basic-auth": "^2.0.0",
+    "discord.js": "^11.3.2",
     "express": "^4.16.3",
     "twig": "^1.12.0"
   }
