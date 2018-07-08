@@ -1,9 +1,12 @@
+var fs = require('fs');
+
 var exports = module.exports = {};
 
-var commands = [
-	require('./channel.js'),
-	require('./help.js')
-];
+var commands = [];
+
+fs.readdirSync('./commands').forEach(file => {
+	commands.push(require('./' + file));
+});
 
 exports.prefix = ['help', 'info', 'h'];
 exports.help = `

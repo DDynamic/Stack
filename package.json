@@ -4,7 +4,7 @@
   "description": "A multipurpose discord bot that helps you work more efficiently.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon -e js,twig",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,8 @@
     "basic-auth": "^2.0.0",
     "discord.js": "^11.3.2",
     "express": "^4.16.3",
-    "twig": "^1.12.0"
+    "nodemon": "^1.17.5",
+    "twig": "^1.12.0",
+    "twig-markdown": "^0.1.2"
   }
 }

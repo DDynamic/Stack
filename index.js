@@ -2,6 +2,7 @@ var auth = require('./auth');
 var express = require('express')
 var Twig = require('twig');
 var http = require('http');
+var fs = require('fs');
 
 var app = express()
 
@@ -18,11 +19,33 @@ app.settings.views = 'views';
 
 app.use(auth);
 
+var commands = [];
+
+fs.readdirSync('./commands').forEach(file => {
+	commands.push(require('./commands/' + file));
+});
+
 app.get('/', function (req, res) {
-	res.render('index.twig', {
-		message : "Hello World"
+	res.render('index.twig');
+});
+
+app.get('/commands', function (req, res) {
+	res.render('commands.twig', {
+		commands: commands
 	});
-})
+});
+
+app.get('/command/:command', function (req, res) {
+	if (req.params.command != 'new') {
+		res.render('command.twig', {
+			command: commands[req.params.command]
+		});
+	} else {
+		res.render('command.twig', {
+			command: 'new'
+		});
+	}
+});
 
 app.listen(port, function() {
     console.log('Stack is running on port ' + port
@@ -32,11 +55,6 @@ app.listen(port, function() {
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-
-var commands = [
-	require('./commands/channel.js'),
-	require('./commands/help.js')
-];
 
 client.on('ready', () => {
     client.user.setPresence({
