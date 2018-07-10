@@ -1,0 +1,27 @@
+{
+    "prefixes": [
+        "help",
+        "info",
+        "h   "
+    ],
+    "help": "   **s! help** Returns bot information.\r\n**s! help [command]** Returns help for the specified command.   ",
+    "code": [
+        " msg.delete();\r",
+        "\r",
+        "var custom = true;\r",
+        "\r",
+        "if (typeof args[0] === 'undefined') {\r",
+        "  msg.author.send('**Stack Bot** | info: <https://github.com/DDynamic/Stack> | For command help, type `s! help [command]`');\r",
+        "} else {\r",
+        "  var command = args[0];\r",
+        "\r",
+        "  for (var i = 0; i < commands.length; i++) {\r",
+        "    var prefixes = commands[i].prefix;\r",
+        "\r",
+        "    if (prefixes.includes(command)) {\r",
+        "      msg.author.send(commands[i].help);\r",
+        "    }\r",
+        "  }\r",
+        "}  "
+    ]
+}

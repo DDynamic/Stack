@@ -1,59 +1,56 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-	{% if command.prefix[0] %}
-		{{ command.prefix[0] }}
-	{% else %}
-		<form action="/command" method="post">
-			<div class="form-group">
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text">s!</span>
-					</div>
-					<input type="text" id="prefixes" name="prefixes" class="form-control" placeholder="command, cmd">
+	<form action="/command" method="post">
+		<div class="form-group">
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text">s!</span>
 				</div>
-				<small class="form-text text-muted">
-					You can define as many command prefixes as you'd like, separated by commas and a space.
-				</small>
+				<input type="text" id="prefixes" name="prefixes" value="{% if command.prefixes is defined %}{{ command.prefixes.join(', ') }}{% endif %}" class="form-control" placeholder="command, cmd">
 			</div>
-			<div class="form-group">
-				<label>Help Text</label>
-				<textarea class="form-control" name="help"></textarea>
-				<small class="form-text text-muted">
-					Specify a help message for this command. You can use discord formatting.
-				</small>
+			<small class="form-text text-muted">
+				You can define as many command prefixes as you'd like, separated by commas and a space.
+			</small>
+		</div>
+		<div class="form-group">
+			<label>Help Text</label>
+			<textarea class="form-control" name="help">{% if command.help is defined %}{{ command.help }}{% endif %}</textarea>
+			<small class="form-text text-muted">
+				Specify a help message for this command. You can use discord formatting.
+			</small>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				response_code.js
 			</div>
-			<div class="card">
-				<div class="card-header">
-					response_code.js
-				</div>
-				<div class="card-body">
-					<code>exports.process = function(client, msg, args) {</code>
-					<textarea id="code" name="code"></textarea>
-					<code>}</code>
-				</div>
-				<div class="card-footer">
-					<p class="card-text">
-						This is the function that will be executed when your command is run.
-						You can do just about anything here, including sending a direct message,
-						updating a value in a database, etc.
-						This file is written in Node.js. You have access to the following variables
-						and the discord.js library. You can find the discord.js documentation <a href="https://discord.js.org/#/docs/main/stable/general/welcome"> here</a>.
-						
-						<br><br><code>client</code> - The main discord.js object.
-						<br><code>msg</code> - The message object.
-						<br><code>args</code> - An array of command arguments.
-					</p>
-				</div>
+			<div class="card-body">
+				<code>var process = function(client, msg, args) {</code>
+				<textarea id="code" name="code">{% if command.help is defined %}{{ command.code.join('\n') }}{% endif %}</textarea>
+				<code>}</code>
 			</div>
-			<input type="hidden" name="command" value="new">
-			<button type="submit" class="btn btn-block btn-primary" style="margin-top: 2vh;">Submit</button>
-		</form>
-		<script>
-			var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
-				lineNumbers: true,
-				mode: 'javascript'
-			});
-		</script>
-	{% endif %}
+			<div class="card-footer">
+				<p class="card-text">
+					This is the function that will be executed when your command is run.
+					You can do just about anything here, including sending a direct message,
+					updating a value in a database, etc.
+					This file is written in Node.js. You have access to the following variables
+					and the discord.js library. You can find the discord.js documentation <a href="https://discord.js.org/#/docs/main/stable/general/welcome"> here</a>.
+					
+					<br><br><code>client</code> - The main discord.js object.
+					<br><code>msg</code> - The message object.
+					<br><code>args</code> - An array of command arguments.
+				</p>
+			</div>
+		</div>
+		<input type="hidden" name="command" value="new">
+		<button type="submit" class="btn btn-block btn-primary" style="margin-top: 2vh;">Submit</button>
+	</form>
+	<script>
+		CodeMirror.fromTextArea(document.getElementById('code'), {
+			lineNumbers: true,
+			height: 100,
+			mode: 'javascript'
+		}).setSize(null, 500);;
+	</script>
 {% endblock %}

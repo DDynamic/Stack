@@ -1,8 +1,0 @@
-var exports = module.exports = {};
-
-exports.prefix = ;
-exports.help = ;
-
-exports.process = function(client, msg, args) {
-
-}

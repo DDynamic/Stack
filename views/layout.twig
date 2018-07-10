@@ -23,6 +23,11 @@
 				<div class="col-12 col-md-9" style="margin-top: 2vh;">
 					<div class="card">
 						<div class="card-body">
+							{% if msg is defined %}
+								<div class="alert alert-info">
+									{{ msg }}
+								</div>
+							{% endif %}
 							{% block content %}
 							{% endblock %}
 						</div>

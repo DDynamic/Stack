@@ -7,7 +7,8 @@
 			{% for key, command in commands %}
 				<li class="list-group-item">
 					<p>
-						<b>s! {{ command.prefix[0] }}</b><br>
+						<b>s! {{ command.prefixes[0] }}</b><br>
+						<a class="btn btn-danger btm-sm float-right ml-2" href="/commands/delete/{{ key }}">Delete</a>
 						<a class="btn btn-primary btm-sm float-right" href="/command/{{ key }}">Edit</a>
 						<small class="text-muted">
 							{{ command.help }}
