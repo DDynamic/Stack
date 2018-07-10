@@ -2,10 +2,8 @@ const bodyParser = require('body-parser');
 const Twig = require('twig');
 const Express = require('express');
 const fs = require('fs');
-const Tmp = require('tmp');
 
 var auth = require('./auth');
-var flash = require('express-flash-2');
 
 try {
     var config = require('./config.json');
@@ -75,7 +73,7 @@ app.post('/command', function (req, res) {
 	}, null, 4);
 	
 	fs.writeFileSync('./commands/' + prefixes[0] + '.json', file);
-	res.redirect('/commands');
+	res.redirect('/commands?msg=Command saved!');
 });
 
 app.listen(port, function() {
@@ -104,11 +102,10 @@ client.on('message', msg => {
 		
 		for (command of commands()) {
 			var prefixes = command.prefixes;
-			var process = new Function('client', 'msg', 'args', command.code.join('\n'));
 			
 			if (prefixes.includes(invoke)) {
 				try {
-					process(client, msg, args);
+					eval(command.code.join('\n'));
 				} catch(err) {
 					console.error(err);
 					msg.reply('an error occured when executing that command.');
