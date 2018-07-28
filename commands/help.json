@@ -1,0 +1,27 @@
+{
+    "prefixes": [
+        "help",
+        "info",
+        "h"
+    ],
+    "help": "   **s! help** Returns bot information.\n**s! help [command]** Returns help for the specified command.   ",
+    "code": [
+        "msg.delete();\n",
+		"\n",
+		"if (typeof args[0] === 'undefined') {\n",
+		"\tmsg.author.send('**Stack Bot** | info: | For command help, type `s! help [command]`');\n",
+		"} else {\n",
+		"\tredis.hgetall('commands', function (err, result) {\n",
+		"\t\tfor (var index in result) {\n",
+		"\t\t\tvar command = JSON.parse(result[index]);\n",
+		"\t\t\tvar prefixes = command.prefixes;\n",
+		"\t\t\t\t\t\t\n",
+		"\t\t\tif (prefixes.includes(args[0])) {\n",
+		"\t\t\t\tmsg.author.send('No help for this command defined.' || command.help);\n",
+		"\t\t\t}\n",
+		"\t\t}\n",
+		"\t});\n",
+		"}\n",
+		"\n"
+    ]
+}
