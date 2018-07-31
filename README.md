@@ -13,7 +13,6 @@ The easiest way to get started with Stack is to deploy the bot to Heroku using t
 6. Run `s! help` on your server.
 
 To add/edit commands, use [Medis](https://github.com/luin/medis) to login to Heroku Redis. You can find the credientials on the Heroku Redis add-on page in your Dyno's dashboard.
-You can use the [command writer](https://ddynamic.github.io/Stack/helper.html) to easily write and format commands.
 
 ## Examples
 
@@ -37,19 +36,8 @@ msg.reply('Your number is: ' + number);
 
 ### Return a cat picture/make an HTTP request
 ```javascript
-var http = require('http');
-
-http.get({
-	host: 'aws.random.cat',
-	port: 80,
-	path: '/meow'
-}, function(response) {
-	response.on('data', function(data) {
-		var link = JSON.parse(data)['file'];
-		msg.reply(link);
-	});
-}).on('error', function(err) {
-  msg.reply('An error occured!');
+request('http://aws.random.cat/meow', function (error, response, body) {
+    msg.reply(body['file']);
 });
 ```
 

@@ -1,0 +1,3 @@
+msg.delete();
+
+msg.author.send('**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type `s! help [command]`');
