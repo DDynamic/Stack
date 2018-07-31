@@ -4,13 +4,12 @@ const client = new Discord.Client();
 var Redis = require('ioredis');
 var redis = new Redis(process.env.REDIS_URL);
 
-redis.hsetnx('commands', '1', JSON.stringify(require('./commands/help.json')));
-redis.hsetnx('commands', '2', JSON.stringify(require('./commands/channel.json')));
+redis.hsetnx('commands', 'channel', JSON.stringify(require('./commands/channel.json')));
 
 client.on('ready', () => {
 	client.user.setPresence({
         game: {
-            name: 's! help | github.com/DDynamic/Stack'
+            name: (process.env.PREFIX || 's!').' help | github.com/DDynamic/Stack'
         }
     });
 	
@@ -24,12 +23,9 @@ client.on('message', msg => {
 		var args = content.slice(2);
 		
 		redis.hgetall('commands', function (err, result) {
-			for (var index in result) {
-				var command = JSON.parse(result[index]);
-				var prefixes = command.prefixes;
-				
-				if (prefixes.includes(invoke)) {
-					eval(command.code.join('\n'));
+			for (var index in result) {				
+				if (index == invoke) {
+					eval(result[index]);
 				}
 			}
 		});
