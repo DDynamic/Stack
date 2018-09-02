@@ -22,17 +22,21 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 	if (msg.content.startsWith((process.env.PREFIX || 's!') + ' ')) {
-		var content = msg.content.split(' ');
-		var invoke = content[1];
-		var args = content.slice(2);
-		
-		redis.hgetall('commands', function (err, result) {
-			for (var index in result) {				
-				if (index == invoke) {
-					eval('try {' + result[index] + '} catch(e) { console.log(e); msg.reply("an error occurred when executing that command. Check the console for more information."); }');
-				}
-			}
-		});
+        if (msg.guild.available) {
+            var content = msg.content.split(' ');
+            var invoke = content[1];
+            var args = content.slice(2);
+
+            redis.hgetall('commands', function (err, result) {
+                for (var index in result) {				
+                    if (index == invoke) {
+                        eval('try {' + result[index] + '} catch(e) { console.log(e); msg.reply("an error occurred when executing that command. Check the console for more information."); }');
+                    }
+                }
+            });
+        } else {
+            msg.author.send('Commands can only be executed in server channels.');
+        }
 	}
 });
 
