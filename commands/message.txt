@@ -41,4 +41,6 @@ if (msg.member.hasPermission('MANAGE_MESSAGES')) {
         default:
 			msg.reply('invalid subcommand! Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
     }
+} else {
+	msg.reply('you must have the **Manage Messages** permission to run this command.');
 }
