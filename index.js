@@ -11,6 +11,8 @@ redis.hsetnx('commands', 'help', fs.readFileSync(__dirname + '/commands/help.txt
 redis.hsetnx('commands', 'channel', fs.readFileSync(__dirname + '/commands/channel.txt'));
 redis.hsetnx('commands', 'message', fs.readFileSync(__dirname + '/commands/message.txt'));
 
+redis.hsetnx('listeners', 'general', fs.readFileSync(__dirname + '/listeners/general.txt'));
+
 client.on('ready', () => {
 	client.user.setPresence({
         game: {
@@ -28,24 +30,25 @@ client.on('message', msg => {
             var invoke = content[1];
             var args = content.slice(2);
             
-            redis.hgetall('commands', function (err, result) {
-                var found = false;
-                
-                for (var index in result) {				
-                    if (index == invoke) {
-                        found = true;
-                        eval('try {' + result[index] + '} catch(e) { console.log(e); msg.reply("an error occurred when executing that command. Check the console for more information."); }');
-                    }
-                }
-                
-                if (!found) {
-                    msg.reply('that command does not exist. Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
-                }
+            redis.hget('commands', invoke, function (err, result) {
+               if (result) {
+                   eval('try {' + result + '} catch(e) { console.log(e); msg.reply("an error occurred when executing that command. Check the console for more information."); }');
+               } else {
+                   msg.reply('that command does not exist. Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
+               }
             });
         } else {
             msg.author.send('Commands can only be run in a channel on the discord server.');
         }
 	}
+    
+    if (msg.guild) {
+        redis.hget('listeners', msg.channel.name, function (err, result) {
+            if (result) {
+                eval('try {' + result + '} catch(e) { console.log(e); msg.reply("an error occurred when executing the listener. Check the console for more information."); }');
+            }
+        });
+    }
 });
 
 process.on('unhandledRejection', (reason) => {
