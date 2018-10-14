@@ -1,3 +1,16 @@
 msg.delete();
 
-msg.author.send('**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type `s! help [command]`');
+var prefix = (process.env.PREFIX || 's!');
+
+msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type \`s! help [command]\`
+
+\`` + prefix + ` help\` - Runs the help command.
+
+\`` + prefix + ` channel scrub [messages]\` - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.
+\`` + prefix + ` channel private\` - Prevents @everyone from viewing the channel.
+\`` + prefix + ` channel reset\` - Completely resets a channel's permissions.
+\`` + prefix + ` channel invite {user1} [user2] [user3]\` - Enables read access on the current channel for the specified user(s).
+\`` + prefix + ` channel remove {user1} [user2] [user3]\` - Deletes the amount of specified messages.
+
+\`` + prefix + ` message {role} {message}\` - Sends a message to the specified role.
+`);

@@ -104,7 +104,7 @@ if (access) {
 			});
 			break;
 		default:
-			msg.reply('invalid subcommand! Please refer to the documentation.');
+			msg.reply('invalid subcommand! Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
 	}   
 } else {
 	msg.reply('you must have the **Manage Channels** permission to run this command.');
