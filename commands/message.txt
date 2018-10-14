@@ -1,6 +1,6 @@
 msg.delete();
     
-if (msg.member.hasPermission('MANAGE_CHANNELS')) {
+if (msg.member.hasPermission('MANAGE_MESSAGES')) {
     switch(args[0]) {
         case 'role':
             if (args[1]) {
