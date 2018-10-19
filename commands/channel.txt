@@ -4,7 +4,7 @@ var access = false;
 
 if (msg.member) {
 	msg.member.hasPermission('MANAGE_CHANNELS') ? access = true: access = false; 
-} else if(msg.author.bot) {
+} else if (msg.author.bot) {
 	access = true;
 }
 
@@ -31,8 +31,9 @@ if (access) {
             
 			msg.channel.send({embed: {
 				color: 14277081,
-				title: 'Privatized',
-				description: 'This channel has been made private. **@everyone cannot view this channel.** \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.'
+				title: 'Private',
+				description: 'This channel has been made private. **@everyone cannot view this channel.** \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.',
+                disableEveryone: true
 			  }
 			});
             
