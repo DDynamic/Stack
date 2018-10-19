@@ -32,8 +32,7 @@ if (access) {
 			msg.channel.send({embed: {
 				color: 14277081,
 				title: 'Private',
-				description: 'This channel has been made private. **@everyone cannot view this channel.** \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.',
-                disableEveryone: true
+				description: 'This channel has been made private. \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.'
 			  }
 			});
             
