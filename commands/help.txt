@@ -2,7 +2,7 @@ msg.delete();
 
 var prefix = (process.env.PREFIX || 's!');
 
-msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type \`s! help [command]\`
+msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type \`` + prefix + ` help [command]\`
 
 \`` + prefix + ` help\` - Runs the help command.
 
