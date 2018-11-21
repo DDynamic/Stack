@@ -19,7 +19,7 @@ client.on('ready', () => {
             name: (process.env.PREFIX || 's!') + ' help | github.com/DDynamic/Stack'
         }
     });
-	
+
 	console.log(`Logged in as ${client.user.tag}!`);
 });
 
@@ -27,9 +27,9 @@ client.on('message', msg => {
 	if (msg.content.startsWith((process.env.PREFIX || 's!') + ' ')) {
         if (msg.guild) {
             var content = msg.content.split(' ');
-            var invoke = content[1];
+            var invoke = content[1].toLowerCase();
             var args = content.slice(2);
-            
+
             redis.hget('commands', invoke, function (err, result) {
                if (result) {
                    eval('try {' + result + '} catch(e) { console.log(e); msg.reply("an error occurred when executing that command. Check the console for more information."); }');
@@ -41,7 +41,7 @@ client.on('message', msg => {
             msg.author.send('Commands can only be run in a channel on the discord server.');
         }
 	}
-    
+
     if (msg.guild) {
         redis.hget('listeners', msg.channel.name, function (err, result) {
             if (result) {
