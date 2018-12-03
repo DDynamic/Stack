@@ -3,8 +3,8 @@
 	"description": "A multipurpose discord bot that helps you work more efficiently.",
 	"repository": "https://github.com/DDynamic/Stack",
 	"logo": "https://i.imgur.com/olWHzGG.png",
-	"keywords": ["discord", "node"],
+	"keywords": ["discord", "node", "postgres"],
 	"addons": [
-		"heroku-redis"
+		"heroku-postgres"
 	]
 }

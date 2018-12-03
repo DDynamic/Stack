@@ -2,15 +2,15 @@ msg.delete();
 
 var prefix = (process.env.PREFIX || 's!');
 
-msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack | For command help, type \`` + prefix + ` help [command]\`
+var help = '';
 
-\`` + prefix + ` help\` - Runs the help command.
+database.query('SELECT * FROM commands', (err, res) => {
+    var rows = res.rows;
 
-\`` + prefix + ` channel scrub [messages]\` - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.
-\`` + prefix + ` channel private\` - Prevents @everyone from viewing the channel.
-\`` + prefix + ` channel reset\` - Completely resets a channel's permissions.
-\`` + prefix + ` channel invite {user1} [user2] [user3]\` - Enables read access on the current channel for the specified user(s).
-\`` + prefix + ` channel remove {user1} [user2] [user3]\` - Deletes the amount of specified messages.
+    for (row in rows) {
+        row = rows[row];
+        help += `\`` + prefix + ' ' + row['aliases'].split(', ')[0] + `\` ` + row['help'] + `\n`;
+    }
 
-\`` + prefix + ` message {role} {message}\` - Sends a message to the specified role.
-`);
+    msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack \n\n` + help);
+});

@@ -1,9 +1,9 @@
 msg.delete();
-    
+
 var access = false;
 
 if (msg.member) {
-	msg.member.hasPermission('MANAGE_CHANNELS') ? access = true: access = false; 
+	msg.member.hasPermission('MANAGE_CHANNELS') ? access = true: access = false;
 } else if (msg.author.bot) {
 	access = true;
 }
@@ -20,22 +20,22 @@ if (access) {
 			break;
 		case 'private':
 			msg.channel.permissionOverwrites.deleteAll();
-            
+
             msg.channel.overwritePermissions(msg.channel.guild.defaultRole.id, {
 				READ_MESSAGES: false
 			});
-            
+
             msg.channel.overwritePermissions(msg.member, {
             	VIEW_CHANNEL: true
             });
-            
+
 			msg.channel.send({embed: {
 				color: 14277081,
 				title: 'Private',
 				description: 'This channel has been made private. \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.'
 			  }
 			});
-            
+
 			break;
 		case 'reset':
 			msg.channel.permissionOverwrites.deleteAll();
@@ -54,10 +54,10 @@ if (access) {
 			for (i = 0; i < args.length; i++) {
 				var query = args[i];
 
-				client.users.find(function(user) {
-					var username = user.username.toUpperCase();
+				msg.guild.members.find(function(user) {
+					var display_name = user.displayName.toUpperCase();
 
-					if (username.includes(query.toUpperCase())) {
+					if (display_name.includes(query.toUpperCase())) {
 						msg.channel.overwritePermissions(user, {
 							READ_MESSAGES: true
 						});
@@ -87,10 +87,10 @@ if (access) {
 			for (i = 0; i < args.length; i++) {
 				var query = args[i];
 
-				client.users.find(function(user) {
-					var username = user.username.toUpperCase();
+				msg.guild.members.find(function(user) {
+					var display_name = user.displayName.toUpperCase();
 
-					if (username.includes(query.toUpperCase())) {
+					if (display_name.includes(query.toUpperCase())) {
 						msg.channel.permissionOverwrites.get(user.id).delete();
 						removals += '<@' + user.id + '> ';
 					}
@@ -116,13 +116,13 @@ if (access) {
                 	return member.id;
                 }
             });
-            
+
             var names = msg.channel.members.map(function(member) {
             	if (!member.user.bot) {
                 	return member.displayName;
                 }
             });
-            
+
         	msg.channel.send({embed: {
 				color: 14277081,
                 fields: [
@@ -142,7 +142,7 @@ if (access) {
         	break;
 		default:
 			msg.reply('invalid subcommand! Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
-	}   
+	}
 } else {
 	msg.reply('you must have the **Manage Channels** permission to run this command.');
 }
