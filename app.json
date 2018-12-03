@@ -5,6 +5,6 @@
 	"logo": "https://i.imgur.com/olWHzGG.png",
 	"keywords": ["discord", "node", "postgres"],
 	"addons": [
-		"heroku-postgres"
+		"heroku-postgresql"
 	]
 }
