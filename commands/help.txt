@@ -9,7 +9,7 @@ database.query('SELECT * FROM commands', (err, res) => {
 
     for (row in rows) {
         row = rows[row];
-        help += `\`` + prefix + ' ' + row['aliases'].split(', ')[0] + `\` ` + row['help'] + `\n`;
+        help += `\`` + prefix + ' ' + row['aliases'].split(', ')[0] + `\` ` + row['help'] + `\n\n`;
     }
 
     msg.author.send(`**Stack Bot** | info: https://github.com/DDynamic/Stack \n\n` + help);
