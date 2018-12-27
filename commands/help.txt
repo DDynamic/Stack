@@ -4,7 +4,7 @@ var prefix = (process.env.PREFIX || 's!');
 
 var help = '';
 
-database.query('SELECT * FROM commands', (err, res) => {
+database.query('SELECT * FROM app_command', (err, res) => {
     var rows = res.rows;
 
     for (row in rows) {
