@@ -21,19 +21,19 @@ database.query(`
 `);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'channel', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'channel');
+	INSERT INTO app_command (aliases, help, function) SELECT 'channel', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'channel');
 `, ['```\nchannel scrub [messages] - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.\nchannel private - Prevents @everyone from viewing the channel.\nchannel reset - Completely resets a channel\'s permissions.\nchannel invite {user1} [user2] [user3] - Enables read access on the current channel for the specified user(s).\nchannel remove {user1} [user2] [user3] - Deletes the amount of specified messages.\n```', fs.readFileSync(__dirname + '/commands/channel.txt')]);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'help', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'help');
+	INSERT INTO app_command (aliases, help, function) SELECT 'help', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'help');
 `, ['Runs the help command.', fs.readFileSync(__dirname + '/commands/help.txt')]);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'message', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'message');
+	INSERT INTO app_command (aliases, help, function) SELECT 'message', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'message');
 `, ['Sends a message to everyone with the first argument, role name.', fs.readFileSync(__dirname + '/commands/message.txt')]);
 
 database.query(`
-	INSERT INTO listeners (channel, function) SELECT 'general', $1::text WHERE NOT EXISTS (SELECT channel FROM app_listener WHERE channel = 'general');
+	INSERT INTO app_listener (channel, function) SELECT 'general', $1::text WHERE NOT EXISTS (SELECT channel FROM app_listener WHERE channel = 'general');
 `, [fs.readFileSync(__dirname + '/listeners/general.txt')]);
 
 client.on('ready', () => {
