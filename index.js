@@ -16,24 +16,24 @@ const database = new Client({
 database.connect();
 
 database.query(`
-	CREATE TABLE IF NOT EXISTS commands (id serial PRIMARY KEY, aliases VARCHAR(100), help VARCHAR(1000), function VARCHAR(100000));
-	CREATE TABLE IF NOT EXISTS listeners (id serial PRIMARY KEY, channel VARCHAR(100), function VARCHAR(100000));
+	CREATE TABLE IF NOT EXISTS app_command (id serial PRIMARY KEY, aliases VARCHAR(100), help VARCHAR(1000), function VARCHAR(100000));
+	CREATE TABLE IF NOT EXISTS app_listener (id serial PRIMARY KEY, channel VARCHAR(100), function VARCHAR(100000));
 `);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'channel', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM commands WHERE aliases = 'channel');
+	INSERT INTO commands (aliases, help, function) SELECT 'channel', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'channel');
 `, ['```\nchannel scrub [messages] - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.\nchannel private - Prevents @everyone from viewing the channel.\nchannel reset - Completely resets a channel\'s permissions.\nchannel invite {user1} [user2] [user3] - Enables read access on the current channel for the specified user(s).\nchannel remove {user1} [user2] [user3] - Deletes the amount of specified messages.\n```', fs.readFileSync(__dirname + '/commands/channel.txt')]);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'help', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM commands WHERE aliases = 'help');
+	INSERT INTO commands (aliases, help, function) SELECT 'help', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'help');
 `, ['Runs the help command.', fs.readFileSync(__dirname + '/commands/help.txt')]);
 
 database.query(`
-	INSERT INTO commands (aliases, help, function) SELECT 'message', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM commands WHERE aliases = 'message');
+	INSERT INTO commands (aliases, help, function) SELECT 'message', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'message');
 `, ['Sends a message to everyone with the first argument, role name.', fs.readFileSync(__dirname + '/commands/message.txt')]);
 
 database.query(`
-	INSERT INTO listeners (channel, function) SELECT 'general', $1::text WHERE NOT EXISTS (SELECT channel FROM listeners WHERE channel = 'general');
+	INSERT INTO listeners (channel, function) SELECT 'general', $1::text WHERE NOT EXISTS (SELECT channel FROM app_listener WHERE channel = 'general');
 `, [fs.readFileSync(__dirname + '/listeners/general.txt')]);
 
 client.on('ready', () => {
@@ -53,7 +53,7 @@ client.on('message', msg => {
             var invoke = content[1].toLowerCase();
             var args = content.slice(2);
 
-			database.query('SELECT * FROM commands', (err, res) => {
+			database.query('SELECT * FROM app_command', (err, res) => {
 				var found = false;
 				var commands = res.rows;
 
@@ -85,7 +85,7 @@ client.on('message', msg => {
 	}
 
     if (msg.guild) {
-		database.query('SELECT * FROM listeners', (err, res) => {
+		database.query('SELECT * FROM app_listener', (err, res) => {
 			var found = false;
 			var listeners = res.rows;
 
