@@ -1,148 +1,171 @@
 msg.delete();
 
-var access = false;
+if (msg.author.bot || msg.member.hasPermission('MANAGE_CHANNELS')) {
+    switch (args[0]) {
+        case 'export':
+            if (msg.mentions.channels.first()) {
+                var channel_mention = msg.mentions.channels.first();
 
-if (msg.member) {
-	msg.member.hasPermission('MANAGE_CHANNELS') ? access = true: access = false;
-} else if (msg.author.bot) {
-	access = true;
-}
+                msg.channel.fetchMessages().then(function(messages) {
+                    var file_path = '/tmp/' + Math.random().toString(36).substring(7) + '.txt';
 
-if (access) {
-	switch(args[0]) {
-		case 'scrub':
-			if (args[1] && args[1] <= 100) {
-				msg.channel.bulkDelete(args[1], true);
-			} else {
-				msg.channel.bulkDelete(100, true);
-			}
+                    var contents = messages.map(function(message) {
+                        return (new Date(message.createdTimestamp)) + ' | ' + message.member.displayName + ': ' + message.content
+                    });
 
-			break;
-		case 'private':
-			msg.channel.permissionOverwrites.deleteAll();
+                    fs.writeFile(file_path, contents.reverse().join('\n'), function(err) {
+                        var file_name = 'export-' + msg.channel.name + '.txt';
+
+                        channel_mention.send(file_name, {
+                            files: [{
+                                attachment: file_path,
+                                name: file_name
+                            }]
+                        }).then(function() {
+                            fs.unlink(file_path);
+                        });
+                    });
+                });
+            } else {
+                msg.reply('please specify a channel to upload the export.')
+            }
+
+            break;
+        case 'scrub':
+            if (args[1] && args[1] <= 100) {
+                msg.channel.bulkDelete(args[1], true);
+            } else {
+                msg.channel.bulkDelete(100, true);
+            }
+
+            break;
+        case 'private':
+            msg.channel.permissionOverwrites.deleteAll();
 
             msg.channel.overwritePermissions(msg.channel.guild.defaultRole.id, {
-				READ_MESSAGES: false
-			});
-
-            msg.channel.overwritePermissions(msg.member, {
-            	VIEW_CHANNEL: true
+                READ_MESSAGES: false
             });
 
-			msg.channel.send({embed: {
-				color: 14277081,
-				title: 'Private',
-				description: 'This channel has been made private. \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.'
-			  }
-			});
+            msg.channel.overwritePermissions(msg.member, {
+                VIEW_CHANNEL: true
+            });
 
-			break;
-		case 'reset':
-			msg.channel.permissionOverwrites.deleteAll();
-			msg.channel.send({embed: {
-				color: 14277081,
-				title: 'Reset',
-				description: 'This channel\'s permissions have been reset. **Anyone can access this channel.** \n\n Run `' + (process.env.PREFIX || 's!') + ' channel private` if you would like to make this channel exclusive.'
-				 }
-			});
-			break;
-		case 'invite':
-			args.shift();
-			var invitations = '';
+            msg.channel.send({
+                embed: {
+                    color: 14277081,
+                    title: 'Private',
+                    description: 'This channel has been made private. \n\n Run `' + (process.env.PREFIX || 's!') + ' channel reset` if you would like to reset channel permissions entirely.'
+                }
+            });
 
-			var i;
-			for (i = 0; i < args.length; i++) {
-				var query = args[i];
+            break;
+        case 'reset':
+            msg.channel.permissionOverwrites.deleteAll();
+            msg.channel.send({
+                embed: {
+                    color: 14277081,
+                    title: 'Reset',
+                    description: 'This channel\'s permissions have been reset. **Anyone can access this channel.** \n\n Run `' + (process.env.PREFIX || 's!') + ' channel private` if you would like to make this channel exclusive.'
+                }
+            });
+            break;
+        case 'invite':
+            args.shift();
+            var invitations = '';
 
-				msg.guild.members.find(function(user) {
-					var display_name = user.displayName.toUpperCase();
+            var i;
+            for (i = 0; i < args.length; i++) {
+                var query = args[i];
 
-					if (display_name.includes(query.toUpperCase())) {
-						msg.channel.overwritePermissions(user, {
-							READ_MESSAGES: true
-						});
-						invitations += '<@' + user.id + '> ';
-					}
-				});
-			}
+                msg.guild.members.find(function(user) {
+                    var display_name = user.displayName.toUpperCase();
 
-			if (!invitations) {
-				invitations = 'No users were invited.';
-			} else {
-				invitations = invitations + 'joined.';
-			}
+                    if (display_name.includes(query.toUpperCase())) {
+                        msg.channel.overwritePermissions(user, {
+                            READ_MESSAGES: true
+                        });
+                        invitations += '<@' + user.id + '> ';
+                    }
+                });
+            }
 
-			msg.channel.send({embed: {
-				color: 14277081,
-				title: 'Joined',
-				description: invitations
-			  }
-			});
+            if (!invitations) {
+                invitations = 'No users were invited.';
+            } else {
+                invitations = invitations + 'joined.';
+            }
 
-			break;
-		case 'remove':
-			args.shift();
-			var removals = '';
+            msg.channel.send({
+                embed: {
+                    color: 14277081,
+                    title: 'Joined',
+                    description: invitations
+                }
+            });
 
-			for (i = 0; i < args.length; i++) {
-				var query = args[i];
+            break;
+        case 'remove':
+            args.shift();
+            var removals = '';
 
-				msg.guild.members.find(function(user) {
-					var display_name = user.displayName.toUpperCase();
+            for (i = 0; i < args.length; i++) {
+                var query = args[i];
 
-					if (display_name.includes(query.toUpperCase())) {
-						msg.channel.permissionOverwrites.get(user.id).delete();
-						removals += '<@' + user.id + '> ';
-					}
-				});
-			}
+                msg.guild.members.find(function(user) {
+                    var display_name = user.displayName.toUpperCase();
 
-			if (!removals) {
-				removals = 'No users were removed.';
-			} else {
-				removals = removals + 'left.';
-			}
+                    if (display_name.includes(query.toUpperCase())) {
+                        msg.channel.permissionOverwrites.get(user.id).delete();
+                        removals += '<@' + user.id + '> ';
+                    }
+                });
+            }
 
-			msg.channel.send({embed: {
-				color: 14277081,
-				title: 'Left',
-				description: removals
-			  }
-			});
-			break;
+            if (!removals) {
+                removals = 'No users were removed.';
+            } else {
+                removals = removals + 'left.';
+            }
+
+            msg.channel.send({
+                embed: {
+                    color: 14277081,
+                    title: 'Left',
+                    description: removals
+                }
+            });
+            break;
         case 'members':
-        	var ids = msg.channel.members.map(function(member) {
-            	if (!member.user.bot) {
-                	return member.id;
+            var ids = msg.channel.members.map(function(member) {
+                if (!member.user.bot) {
+                    return member.id;
                 }
             });
 
             var names = msg.channel.members.map(function(member) {
-            	if (!member.user.bot) {
-                	return member.displayName;
+                if (!member.user.bot) {
+                    return member.displayName;
                 }
             });
 
-        	msg.channel.send({embed: {
-				color: 14277081,
-                fields: [
-                	{
-                    	name: 'Member',
+            msg.channel.send({
+                embed: {
+                    color: 14277081,
+                    fields: [{
+                        name: 'Member',
                         value: names.filter(Boolean).join('\n'),
                         inline: true
-                    },
-                    {
-                    	name: 'ID',
+                    }, {
+                        name: 'ID',
                         value: ids.filter(Boolean).join('\n'),
                         inline: true
-                    }
-                ]
-			  }
-			});
-        	break;
-		default:
-			msg.reply('invalid subcommand! Refer to command help by running: `'+ (process.env.PREFIX || 's!') + ' help`');
-	}
+                    }]
+                }
+            });
+            break;
+        default:
+            msg.reply('invalid subcommand! Refer to command help by running: `' + (process.env.PREFIX || 's!') + ' help`');
+    }
 } else {
-	msg.reply('you must have the **Manage Channels** permission to run this command.');
+    msg.reply('you must have the **Manage Channels** permission to run this command.');
 }
