@@ -47,7 +47,7 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-	if (msg.content.startsWith((process.env.PREFIX || 's!') + ' ')) {
+	if (msg.content.toLowerCase().startsWith((process.env.PREFIX.toLowerCase() || 's!') + ' ')) {
         if (msg.guild) {
             var content = msg.content.split(' ');
             var invoke = content[1].toLowerCase();
