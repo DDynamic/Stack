@@ -22,7 +22,7 @@ database.query(`
 
 database.query(`
 	INSERT INTO app_command (aliases, help, function) SELECT 'channel', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'channel');
-`, ['```\nchannel export {destination} - Exports the history of the current channel to the specified destination.\nchannel scrub [messages] - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.\nchannel private - Prevents @everyone from viewing the channel.\nchannel reset - Completely resets a channel\'s permissions.\nchannel invite {user1} [user2] [user3] - Enables read access on the current channel for the specified user(s).\nchannel remove {user1} [user2] [user3] - Deletes the amount of specified messages.\n```', fs.readFileSync(__dirname + '/commands/channel.txt')]);
+`, ['```\nchannel export {destination} - Exports the history of the current channel to the specified destination.\nchannel scrub [messages] - Deletes the amount of specified messages. If no number is specified, then the last 100 messages will be deleted.\nchannel private - Prevents @everyone from viewing the channel.\nchannel reset - Completely resets a channel\'s permissions.\nchannel invite {user1} [user2] [user3] - Enables read access on the current channel for the specified user(s).\nchannel remove {user1} [user2] [user3] - Deletes the amount of specified messages.\nchannel list [displaynames|ids] - Lists the specified values that are present in the channel.\n```', fs.readFileSync(__dirname + '/commands/channel.txt')]);
 
 database.query(`
 	INSERT INTO app_command (aliases, help, function) SELECT 'help', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'help');

@@ -149,33 +149,34 @@ if (msg.author.bot || msg.member.hasPermission('MANAGE_CHANNELS')) {
                 }
             });
             break;
-        case 'members':
-            var ids = msg.channel.members.map(function(member) {
-                if (!member.user.bot) {
-                    return member.id;
+        case 'list':
+            var array = msg.channel.members.filter(function(element) {
+                return !element.user.bot;
+            });
+
+            array = array.map(function(element) {
+                if (args[1] == 'ids') {
+                    return element.id;
+                } else {
+                    return element.displayName;
                 }
             });
 
-            var names = msg.channel.members.map(function(member) {
-                if (!member.user.bot) {
-                    return member.displayName;
+            for (var i = 0; i < array.length; i++) {
+                if (i === 0) {
+                    msg.author.send('**List from #' + msg.channel.name + ':**');
                 }
-            });
 
-            msg.channel.send({
-                embed: {
-                    color: 14277081,
-                    fields: [{
-                        name: 'Member',
-                        value: names.filter(Boolean).join('\n'),
-                        inline: true
-                    }, {
-                        name: 'ID',
-                        value: ids.filter(Boolean).join('\n'),
-                        inline: true
-                    }]
+                if (i % 10 === 0) {
+                    msg.author.send({
+                        embed: {
+                            color: 14277081,
+                            description: array.slice(i, i + 10).join('\n')
+                        }
+                    });
                 }
-            });
+            }
+
             break;
         default:
             msg.reply('invalid subcommand! Refer to command help by running: `' + (process.env.PREFIX || 's!') + ' help`');
