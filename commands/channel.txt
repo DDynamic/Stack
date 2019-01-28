@@ -3,46 +3,52 @@ msg.delete();
 if (msg.author.bot || msg.member.hasPermission('MANAGE_CHANNELS')) {
     switch (args[0]) {
         case 'export':
+            var channel_mention;
             if (msg.mentions.channels.first()) {
                 var channel_mention = msg.mentions.channels.first();
-                var messages = [];
-
-                function getMessages(before) {
-                    msg.channel.fetchMessages({
-                        limit: 100,
-                        before: (before || 0)
-                    }).then(function(message_batch) {
-                        messages.push(message_batch.array());
-
-                        if (message_batch.size == 100) {
-                            getMessages(message_batch.array().pop().id);
-                        } else {
-                            var file_path = '/tmp/' + Math.random().toString(36).substring(7) + '.txt';
-
-                            var contents = [].concat.apply([], messages).map(function(message) {
-                                return (new Date(message.createdTimestamp)) + ' | ' + message.member.displayName + ': ' + message.content
-                            });
-
-                            fs.writeFile(file_path, contents.reverse().join('\n'), function(err) {
-                                var file_name = 'export-' + msg.channel.name + '.txt';
-
-                                channel_mention.send(file_name, {
-                                    files: [{
-                                        attachment: file_path,
-                                        name: file_name
-                                    }]
-                                }).then(function() {
-                                    fs.unlink(file_path, function() {});
-                                });
-                            });
-                        }
-                    })
-                }
-
-                getMessages();
             } else {
-                msg.reply('please specify a channel to upload the export.')
+                var channel_mention = msg.channel;
             }
+
+            var messages = [];
+
+            function getMessages(before) {
+                msg.channel.fetchMessages({
+                    limit: 100,
+                    before: (before || 0)
+                }).then(function(message_batch) {
+                    messages.push(message_batch.array());
+
+                    if (message_batch.size == 100) {
+                        getMessages(message_batch.array().pop().id);
+                    } else {
+                        var file_path = '/tmp/' + Math.random().toString(36).substring(7) + '.txt';
+
+                        var contents = [].concat.apply([], messages).map(function(message) {
+                            return (new Date(message.createdTimestamp)) + ' | ' + message.member.displayName + ': ' + message.content
+                        });
+
+                        fs.writeFile(file_path, contents.reverse().join('\n'), function(err) {
+                            var file_name = 'export-' + msg.channel.name + '.txt';
+
+                            channel_mention.send(file_name, {
+                                files: [{
+                                    attachment: file_path,
+                                    name: file_name
+                                }]
+                            }).then(function() {
+                                fs.unlink(file_path, function() {});
+                            }).then(function() {
+                              	if (msg.channel != channel_mention) {
+                                  	msg.reply('channel export complete.');
+                                }
+                            });
+                        });
+                    }
+                })
+            }
+
+            getMessages();
 
             break;
         case 'scrub':
