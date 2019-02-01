@@ -25,7 +25,7 @@ if (msg.author.bot || msg.member.hasPermission('MANAGE_CHANNELS')) {
                         var file_path = '/tmp/' + Math.random().toString(36).substring(7) + '.txt';
 
                         var contents = [].concat.apply([], messages).map(function(message) {
-                            return (new Date(message.createdTimestamp)) + ' | ' + message.member.displayName + ': ' + message.content
+                            return (new Date(message.createdTimestamp)) + ' | ' + (message.member ? message.member.displayName : 'Unknown User') + ': ' + message.content
                         });
 
                         fs.writeFile(file_path, contents.reverse().join('\n'), function(err) {
