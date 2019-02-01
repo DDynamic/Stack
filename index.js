@@ -49,7 +49,7 @@ client.on('ready', () => {
 client.on('message', msg => {
 	if (msg.content.toLowerCase().startsWith(process.env.PREFIX.toLowerCase() || 's!')) {
         if (msg.guild) {
-            var content = msg.content.split(process.env.PREFIX.toLowerCase() || 's!')[1].trim().split(' ');
+            var content = msg.content.substring(process.env.PREFIX.length || 2).trim().split(' ');
             var invoke = content[0].toLowerCase();
             var args = content.slice(1);
 
@@ -62,7 +62,7 @@ client.on('message', msg => {
 					var aliases = command['aliases'].split(', ');
 
 					for (alias in aliases) {
-						if (aliases[alias] == invoke) {
+						if (aliases[alias].toLowerCase() == invoke.toLowerCase()) {
 							found = true;
 
 							try {
