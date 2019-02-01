@@ -47,11 +47,11 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-	if (msg.content.toLowerCase().startsWith((process.env.PREFIX.toLowerCase() || 's!') + ' ')) {
+	if (msg.content.toLowerCase().startsWith(process.env.PREFIX.toLowerCase() || 's!')) {
         if (msg.guild) {
-            var content = msg.content.split(' ');
-            var invoke = content[1].toLowerCase();
-            var args = content.slice(2);
+            var content = msg.content.split(process.env.PREFIX.toLowerCase() || 's!')[1].trim().split(' ');
+            var invoke = content[0].toLowerCase();
+            var args = content.slice(1);
 
 			database.query('SELECT * FROM app_command', (err, res) => {
 				var found = false;
