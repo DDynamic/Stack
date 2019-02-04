@@ -13,11 +13,14 @@ const database = new Client({
   ssl: false
 });
 
+var schedule = require('node-schedule');
+
 database.connect();
 
 database.query(`
 	CREATE TABLE IF NOT EXISTS app_command (id serial PRIMARY KEY, aliases VARCHAR(100), help VARCHAR(1000), function VARCHAR(100000));
 	CREATE TABLE IF NOT EXISTS app_listener (id serial PRIMARY KEY, channel VARCHAR(100), function VARCHAR(100000));
+    CREATE TABLE IF NOT EXISTS app_task (id serial PRIMARY KEY, description VARCHAR(500), trigger VARCHAR(100), function VARCHAR(100000));
 `);
 
 database.query(`
@@ -31,10 +34,6 @@ database.query(`
 database.query(`
 	INSERT INTO app_command (aliases, help, function) SELECT 'message', $1::text, $2::text WHERE NOT EXISTS (SELECT aliases FROM app_command WHERE aliases = 'message');
 `, ['Sends a message to everyone with the first argument, role name.', fs.readFileSync(__dirname + '/commands/message.txt')]);
-
-database.query(`
-	INSERT INTO app_listener (channel, function) SELECT 'general', $1::text WHERE NOT EXISTS (SELECT channel FROM app_listener WHERE channel = 'general');
-`, [fs.readFileSync(__dirname + '/listeners/general.txt')]);
 
 client.on('ready', () => {
 	client.user.setPresence({
@@ -104,6 +103,36 @@ client.on('message', msg => {
 		});
     }
 });
+
+jobs = []
+
+setInterval(function() {
+    database.query('SELECT * FROM app_task', (err, res) => {
+        for (let job in jobs) {
+            job = jobs[job]
+            job.cancel();
+
+        }
+
+        jobs = [];
+
+        tasks = res.rows
+
+        for (task in tasks) {
+            task = tasks[task];
+
+            var job = schedule.scheduleJob(task['trigger'], function() {
+                try {
+                    eval(task['function']);
+                } catch (err) {
+                    console.log(err);
+                }
+            });
+
+            jobs.push(job)
+        }
+    });
+}, (process.env.TASK_TIME || 60000));
 
 process.on('unhandledRejection', (reason) => {
     console.error(reason.toString());
