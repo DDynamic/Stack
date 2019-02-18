@@ -109,14 +109,16 @@ jobs = []
 setInterval(function() {
     database.query('SELECT * FROM app_task', (err, res) => {
         for (let job in jobs) {
-            job = jobs[job]
-            job.cancel();
+            job = jobs[job];
 
+            if (job) {
+                job.cancel();
+            }
         }
 
         jobs = [];
 
-        tasks = res.rows
+        tasks = res.rows;
 
         for (task in tasks) {
             task = tasks[task];
