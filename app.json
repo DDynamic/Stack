@@ -1,10 +1,17 @@
 {
-	"name": "Stack",
-	"description": "A multipurpose discord bot that helps you work more efficiently.",
-	"repository": "https://github.com/DDynamic/Stack",
-	"logo": "https://i.imgur.com/olWHzGG.png",
-	"keywords": ["discord", "node", "postgres"],
-	"addons": [
-		"heroku-postgresql"
-	]
+    "name": "Stack",
+    "description": "A multipurpose discord bot that helps you work more efficiently.",
+    "repository": "https://github.com/DDynamic/Stack",
+    "logo": "https://i.imgur.com/olWHzGG.png",
+    "keywords": [
+        "discord",
+        "node",
+        "postgres"
+    ],
+    "addons": [
+        "heroku-postgresql"
+    ],
+    "engines": {
+        "node": "10.16.3"
+    }
 }
