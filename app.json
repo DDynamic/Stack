@@ -10,8 +10,5 @@
     ],
     "addons": [
         "heroku-postgresql"
-    ],
-    "engines": {
-        "node": "10.16.3"
-    }
+    ]
 }
